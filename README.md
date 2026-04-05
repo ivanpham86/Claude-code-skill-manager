@@ -55,9 +55,12 @@
 
 ## 📸 Screenshots
 
-ot_20260405_090808](https://github.com/user-attachments/assets/0dbee0f2-8467-4f45-b588-90ced56f42d1)
-![beautysh![beautyshot_20260405_090924](https://github.com/user-attachments/assets/4f9f67c2-d14e-4ab8-9bff-203cf779cc08)
 
+![beautyshot_20260405_090808](https://github.com/user-attachments/assets/6fb28546-b0a6-4b87-a5af-cc6f76f93675)
+
+
+
+![beautyshot_20260405_090924](https://github.com/user-attachments/assets/ed61d86e-1127-446f-90cf-bd0d1f6a7be3)
 
 ---
 
