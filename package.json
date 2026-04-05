@@ -2,7 +2,7 @@
   "name": "claude-skill-manager",
   "version": "1.0.0",
   "description": "GUI manager for Claude Code skills",
-  "author": "Ivan Pham",
+  "author": "Ivan Pham <ivanpham86@gmail.com>",
   "main": "dist/main.js",
   "scripts": {
     "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron . --no-sandbox\"",

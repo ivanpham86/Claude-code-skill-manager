@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
@@ -49,6 +50,7 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
+    if: always()
     permissions:
       contents: write
 
