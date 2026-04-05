@@ -6,7 +6,7 @@
   "main": "dist/main.js",
   "scripts": {
     "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron . --no-sandbox\"",
-    "prebuild": "mkdir -p dist/handlers && cp electron/main.js dist/main.js && cp electron/preload.js dist/preload.js && cp electron/handlers/*.js dist/handlers/",
+    "prebuild": "node -e \"const fs=require('fs'),p=require('path');['dist','dist/handlers'].forEach(d=>{if(!fs.existsSync(d))fs.mkdirSync(d,{recursive:true})});['main.js','preload.js'].forEach(f=>fs.copyFileSync(p.join('electron',f),p.join('dist',f)));fs.readdirSync('electron/handlers').forEach(f=>fs.copyFileSync(p.join('electron/handlers',f),p.join('dist/handlers',f)))\"",
     "build": "vite build",
     "dist": "npm run prebuild && vite build && electron-builder",
     "dist:mac": "npm run prebuild && vite build && electron-builder --mac",
