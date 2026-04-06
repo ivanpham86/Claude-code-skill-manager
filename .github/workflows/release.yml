@@ -6,23 +6,23 @@ on:
       - 'v*'
 
 jobs:
-  build:
+  build-mac:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        include:
+          - os: macos-13
+            arch: x64
+          - os: macos-latest
+            arch: arm64
     runs-on: ${{ matrix.os }}
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-
       - name: Install dependencies
         run: npm install
-
       - name: Copy electron to dist
         run: |
           mkdir -p dist/handlers
@@ -30,36 +30,62 @@ jobs:
           cp electron/preload.js dist/preload.js
           cp electron/handlers/*.js dist/handlers/
         shell: bash
+      - name: Build & Package
+        run: npm run build && npx electron-builder --mac --${{ matrix.arch }} --publish never
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-mac-${{ matrix.arch }}
+          path: |
+            release/*.dmg
+            release/*.zip
 
+  build-other:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install
+      - name: Copy electron to dist
+        run: |
+          mkdir -p dist/handlers
+          cp electron/main.js dist/main.js
+          cp electron/preload.js dist/preload.js
+          cp electron/handlers/*.js dist/handlers/
+        shell: bash
       - name: Build & Package
         run: npm run build && npx electron-builder --publish never
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: release-${{ matrix.os }}
           path: |
-            release/*.dmg
-            release/*.zip
             release/*.exe
             release/*.AppImage
             release/*.deb
 
   release:
-    needs: build
+    needs: [build-mac, build-other]
     runs-on: ubuntu-latest
     if: always()
     permissions:
       contents: write
-
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
-
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
